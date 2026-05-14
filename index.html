@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Изјава — фискални рачун за гориво</title>
+<meta name="theme-color" content="#0f766e">
+<meta name="description" content="Сликај фискални рачун за гориво и направи изјаву (PDF). Ради офлајн, све остаје на уређају.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-96x96.png" sizes="96x96" type="image/png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Изјава за фискални рачун за гориво</h1>
+    <p>Сликај рачун → провери податке → направи PDF и подели.</p>
+    <button id="installBtn" class="installbtn hidden">⬇ Инсталирај апликацију</button>
+  </header>
+
+  <div class="steps">
+    <div id="tab1" class="active">1. Рачун</div>
+    <div id="tab2">2. Провера</div>
+    <div id="tab3">3. PDF</div>
+  </div>
+
+  <!-- ───────────── КОРАК 1 ───────────── -->
+  <section id="step1" class="card">
+    <h2>Подаци и слика рачуна</h2>
+
+    <label for="ime">Име и презиме</label>
+    <input type="text" id="ime" placeholder="нпр. Петар Петровић" autocomplete="name">
+
+    <label for="firma">Фирма / послодавац</label>
+    <input type="text" id="firma" placeholder="нпр. Назив фирме д.о.о." autocomplete="organization">
+
+    <label for="grad">Место (град)</label>
+    <input type="text" id="grad" placeholder="нпр. Новом Саду">
+
+    <label for="email">Прималац мејла (опционо)</label>
+    <input type="email" id="email" placeholder="нпр. racunovodstvo@firma.rs" autocomplete="email">
+    <p class="hint">Сва поља се памте на овом уређају — попуни једном.</p>
+
+    <label>Потпис</label>
+    <div class="sigrow">
+      <img id="sigPreview" class="hidden" alt="потпис">
+      <label class="sigbtn" for="sigFile">📷 Сликај / учитај потпис</label>
+      <input type="file" id="sigFile" accept="image/*" hidden>
+      <span class="hint" id="sigStatus">опционо — сликај потпис или учитај слику (бела позадина се уклања)</span>
+    </div>
+
+    <label>Слика фискалног рачуна</label>
+    <label class="filebox" id="fileBox" for="racunFile">
+      <input type="file" id="racunFile" accept="image/*" capture="environment">
+      <div class="big" id="fileLabel">📷 Сликај или изабери рачун</div>
+      <div class="sub" id="fileSub">QR код треба да буде на слици</div>
+    </label>
+
+    <button class="btn" id="btnProcess" style="margin-top:18px">Обради рачун →</button>
+  </section>
+
+  <!-- ───────────── КОРАК 2 ───────────── -->
+  <section id="step2" class="card hidden">
+    <h2>Провери и исправи податке</h2>
+
+    <div class="read">
+      <span class="hint" style="margin:0">Број рачуна:</span>
+      <span id="s2src" class="srcbadge src-man">—</span>
+    </div>
+    <p id="s2note" class="note hidden">
+      QR код није прочитан — унеси број рачуна и датум ручно (пишу на рачуну).
+    </p>
+
+    <label for="s2ime">Име и презиме</label>
+    <input type="text" id="s2ime">
+
+    <label for="s2bi">Број рачуна (БИ)</label>
+    <input type="text" id="s2bi" inputmode="numeric" placeholder="нпр. 298028">
+
+    <label for="s2datum">Датум рачуна</label>
+    <input type="date" id="s2datum">
+
+    <label for="s2mesec">Месец на који се односи</label>
+    <select id="s2mesec"></select>
+
+    <div class="preview">
+      <img id="s2preview" alt="очишћен рачун">
+      <div class="cap">очишћена слика рачуна (иде у PDF)</div>
+    </div>
+
+    <div class="btnrow">
+      <button class="btn ghost" id="btnBack2">← Назад</button>
+      <button class="btn" id="btnGenerate">Направи PDF →</button>
+    </div>
+  </section>
+
+  <!-- ───────────── КОРАК 3 ───────────── -->
+  <section id="step3" class="card hidden">
+    <h2>Готова изјава</h2>
+
+    <div class="preview">
+      <img id="s3preview" alt="изјава">
+    </div>
+
+    <div class="btnrow">
+      <button class="btn" id="btnShare">📤 Подели / пошаљи</button>
+      <button class="btn ghost" id="btnDownload">⬇ Преузми</button>
+    </div>
+    <p class="ok-note">
+      Тапни <b>„Подели"</b> → изабери <b>Gmail</b> (или друго) — PDF се сам прикачи као прилог.
+      <span id="s3to"></span>
+    </p>
+    <p id="s3sent" class="ok-note hidden" style="background:#e3f1ef;color:#0b5a54">Послато / преузето ✓</p>
+
+    <button class="btn ghost" id="btnNew" style="margin-top:14px">+ Нова изјава</button>
+  </section>
+
+  <footer>Све се ради у прегледачу · ништа не одлази са уређаја · ради и офлајн</footer>
+</div>
+
+<div id="busy" class="hidden">
+  <div class="spinner"></div>
+  <div class="msg" id="busyMsg">Обрађујем…</div>
+</div>
+
+<script src="vendor_js/zbar-wasm.js"></script>
+<script src="vendor_js/jspdf.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

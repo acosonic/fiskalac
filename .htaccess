@@ -1,0 +1,22 @@
+DirectoryIndex index.html
+
+# WebAssembly mora imati ispravan MIME tip (zbar.wasm)
+AddType application/wasm .wasm
+
+# Service worker se ne kešira — da PWA ne ostane na staroj verziji
+<Files "service-worker.js">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+</Files>
+<Files "manifest.json">
+    Header set Cache-Control "no-cache"
+</Files>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set Referrer-Policy "same-origin"
+</IfModule>
+
+# dotfiles van dometa
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

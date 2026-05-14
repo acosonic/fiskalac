@@ -1,0 +1,15 @@
+# backup starog (ranjivog) PHP app-a + stare uploadovane slike — ne ide u repo
+_old/
+
+# privremeni / test artefakti
+_t.html
+_s.php
+_sp.php
+_to/
+_*.jpg
+_master.png
+
+# OS / editor
+.DS_Store
+*.bak
+*.bak.*
