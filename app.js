@@ -27,22 +27,70 @@ function saveProfile() {
   for (const k of PROFILE_KEYS) localStorage.setItem('fisk_' + k, $('#' + k).value.trim());
 }
 
-// potpis: belu pozadinu pretvori u providnu pa snimi kao PNG dataURL
+// connected-components: nađi sve tamne mrlje (za izdvajanje potpisa od šuma/senki)
+function inkComponents(f, W, H, thr) {
+  const seen = new Uint8Array(W * H), stack = new Int32Array(W * H), comps = [];
+  for (let s = 0; s < W * H; s++) {
+    if (seen[s] || f[s] >= thr) continue;
+    let sp = 0; stack[sp++] = s; seen[s] = 1;
+    let area = 0, x0 = W, y0 = H, x1 = 0, y1 = 0;
+    while (sp > 0) {
+      const p = stack[--sp], px = p % W, py = (p - px) / W;
+      area++;
+      if (px < x0) x0 = px; if (px > x1) x1 = px;
+      if (py < y0) y0 = py; if (py > y1) y1 = py;
+      const L = px > 0, R = px < W - 1, U = py > 0, D = py < H - 1;
+      const t = (q) => { if (!seen[q] && f[q] < thr) { seen[q] = 1; stack[sp++] = q; } };
+      if (L) t(p-1); if (R) t(p+1); if (U) t(p-W); if (D) t(p+W);
+      if (L&&U) t(p-W-1); if (R&&U) t(p-W+1); if (L&&D) t(p+W-1); if (R&&D) t(p+W+1);
+    }
+    comps.push({ area, x0, y0, x1, y1 });
+  }
+  return comps;
+}
+
+// potpis sa фотографије (мастило на папиру) → исечен потпис на провидној позадини.
+// flatten уклања сенке/неравномерно светло, connected-components издваја потпис
+// од ситних мрља/тачкица, па мастило → тамно непрозирно, папир → провидно.
 async function processSignature(file) {
   const img = await fileToImage(file);
-  const c = document.createElement('canvas');
-  const sc = Math.min(1, 600 / Math.max(img.width, img.height));
-  c.width = Math.round(img.width*sc); c.height = Math.round(img.height*sc);
-  const ctx = c.getContext('2d');
-  ctx.drawImage(img, 0, 0, c.width, c.height);
-  const id = ctx.getImageData(0, 0, c.width, c.height);
-  const d = id.data;
-  for (let i = 0; i < d.length; i += 4) {
-    const lum = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
-    if (lum > 225) d[i+3] = 0;                       // skoro belo -> providno
-    else { const k = lum < 90 ? 0 : (lum-90)/1.4; d[i]=d[i+1]=d[i+2]=k|0; }
+  const { f, W, H } = flattenGray(img, 2400);
+
+  const comps = inkComponents(f, W, H, 115);
+  let bb;
+  if (!comps.length) {
+    bb = { x0: 0, y0: 0, x1: W - 1, y1: H - 1 };
+  } else {
+    comps.sort((a, b) => b.area - a.area);
+    bb = { x0: comps[0].x0, y0: comps[0].y0, x1: comps[0].x1, y1: comps[0].y1 };
+    // спој оближње компоненте (тачке, одвојени потези потписа); даљи шум остаје напољу
+    const acx = (bb.x0 + bb.x1) / 2, acy = (bb.y0 + bb.y1) / 2;
+    const reach = Math.max(bb.x1 - bb.x0, bb.y1 - bb.y0) * 1.25;
+    for (let i = 1; i < comps.length; i++) {
+      const c = comps[i];
+      if (c.area < 10) continue;
+      const ccx = (c.x0 + c.x1) / 2, ccy = (c.y0 + c.y1) / 2;
+      if (Math.hypot(ccx - acx, ccy - acy) < reach) {
+        bb.x0 = Math.min(bb.x0, c.x0); bb.y0 = Math.min(bb.y0, c.y0);
+        bb.x1 = Math.max(bb.x1, c.x1); bb.y1 = Math.max(bb.y1, c.y1);
+      }
+    }
   }
-  ctx.putImageData(id, 0, 0);
+  const pad = Math.round(Math.max(bb.x1 - bb.x0, bb.y1 - bb.y0) * 0.07);
+  const x0 = Math.max(0, bb.x0 - pad), y0 = Math.max(0, bb.y0 - pad);
+  const x1 = Math.min(W - 1, bb.x1 + pad), y1 = Math.min(H - 1, bb.y1 + pad);
+  const cw = x1 - x0 + 1, ch = y1 - y0 + 1;
+
+  const out = new ImageData(cw, ch);
+  for (let y = 0; y < ch; y++) for (let x = 0; x < cw; x++) {
+    const lum = f[(y + y0) * W + (x + x0)];
+    const a = lum >= 170 ? 0 : lum <= 95 ? 255 : Math.round((170 - lum) / 75 * 255);
+    const o = (y * cw + x) * 4;
+    out.data[o] = 28; out.data[o+1] = 28; out.data[o+2] = 42; out.data[o+3] = a;
+  }
+  const c = document.createElement('canvas');
+  c.width = cw; c.height = ch;
+  c.getContext('2d').putImageData(out, 0, 0);
   return c.toDataURL('image/png');
 }
 
