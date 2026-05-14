@@ -6,6 +6,16 @@
 <title>Изјава — фискални рачун за гориво</title>
 <meta name="theme-color" content="#0f766e">
 <meta name="description" content="Сликај фискални рачун за гориво и направи изјаву (PDF). Ради офлајн, све остаје на уређају.">
+<!-- Open Graph / Twitter — преглед слике кад се линк подели -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Изјава за фискални рачун за гориво">
+<meta property="og:description" content="Сликај фискални рачун за гориво и направи изјаву (PDF). Ради офлајн, све остаје на уређају.">
+<meta property="og:url" content="https://acosonic.github.io/fiskalac/">
+<meta property="og:image" content="https://acosonic.github.io/fiskalac/web-app-manifest-512x512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Изјава за фискални рачун за гориво">
+<meta name="twitter:description" content="Сликај фискални рачун за гориво и направи изјаву (PDF).">
+<meta name="twitter:image" content="https://acosonic.github.io/fiskalac/web-app-manifest-512x512.png">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon-96x96.png" sizes="96x96" type="image/png">
@@ -16,7 +26,10 @@
 <div class="wrap">
 
   <header>
-    <h1>Изјава за фискални рачун за гориво</h1>
+    <div class="brand">
+      <img src="favicon.svg" alt="" class="logo" width="54" height="54">
+      <h1>Изјава за фискални рачун за гориво</h1>
+    </div>
     <p>Сликај рачун → провери податке → направи PDF и подели.</p>
     <button id="installBtn" class="installbtn">⬇ Инсталирај апликацију</button>
   </header>
@@ -44,12 +57,20 @@
     <input type="email" id="email" placeholder="нпр. racunovodstvo@firma.rs" autocomplete="email">
     <p class="hint">Сва поља се памте на овом уређају — попуни једном.</p>
 
-    <label>Потпис</label>
+    <label>Потпис <span class="hint" style="font-weight:400">(опционо)</span></label>
     <div class="sigrow">
       <img id="sigPreview" class="hidden" alt="потпис">
-      <label class="sigbtn" for="sigFile">📷 Сликај / учитај потпис</label>
+      <label class="sigbtn" for="sigCamera">📷 Сликај</label>
+      <input type="file" id="sigCamera" accept="image/*" capture="environment" hidden>
+      <label class="sigbtn" for="sigFile">📁 Изабери</label>
       <input type="file" id="sigFile" accept="image/*" hidden>
-      <span class="hint" id="sigStatus">опционо — сликај потпис или учитај слику (бела позадина се уклања)</span>
+    </div>
+    <p class="hint" id="sigStatus">потпис се памти на овом уређају</p>
+    <div class="sighelp">
+      💡 <b>Како да потпис лепо испадне:</b><br>
+      1. Потпиши се <b>црним</b> (хемијска/фломастер) на <b>белом</b> папиру.<br>
+      2. Сликај изблиза, под добрим светлом, тако да потпис попуни кадар.<br>
+      3. Бела позадина се аутоматски уклања — у изјаву иде само потпис.
     </div>
 
     <label>Слика фискалног рачуна</label>

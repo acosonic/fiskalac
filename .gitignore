@@ -13,3 +13,6 @@ _master.png
 .DS_Store
 *.bak
 *.bak.*
+
+# lokalni upload helper (za prenos slika na mašinu) — ne ide u repo
+up/

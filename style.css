@@ -23,7 +23,10 @@ body {
 }
 .wrap { max-width: 680px; margin: 0 auto; padding: 18px 16px 60px; }
 
-header h1 { font-size: 1.35rem; margin: 8px 0 2px; }
+.brand { display: flex; align-items: center; gap: 12px; margin: 8px 0 4px; }
+.brand h1 { margin: 0; }
+.logo { border-radius: 12px; flex-shrink: 0; box-shadow: 0 1px 4px rgba(0,0,0,.18); }
+header h1 { font-size: 1.3rem; }
 header p { margin: 0 0 12px; color: var(--muted); font-size: .92rem; }
 
 /* PWA install dugme */
@@ -73,16 +76,24 @@ input:focus, select:focus { outline: 2px solid var(--accent); border-color: var(
 .filebox.has { border-style: solid; border-color: var(--accent); background: var(--accent-l); }
 
 /* signature row */
-.sigrow { display: flex; align-items: center; gap: 14px; }
+.sigrow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .sigrow img {
   height: 56px; max-width: 160px; border: 1px solid var(--line);
   border-radius: 8px; background: #fff; padding: 4px;
 }
 .sigrow .sigbtn {
-  font-size: .85rem; padding: 8px 12px; border: 1px solid var(--line);
+  font-size: .9rem; font-weight: 600; padding: 10px 16px; border: 1px solid var(--line);
   border-radius: 8px; background: #fff; cursor: pointer;
 }
 .sigrow .sigbtn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* uputstvo za potpis */
+.sighelp {
+  font-size: .82rem; line-height: 1.65; color: var(--muted);
+  background: #f3f6f8; border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px 12px; margin-top: 8px;
+}
+.sighelp b { color: var(--ink); }
 
 /* buttons */
 .btn {

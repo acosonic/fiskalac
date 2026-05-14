@@ -481,8 +481,9 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  $('#sigFile').addEventListener('change', async (e) => {
+  async function handleSignature(e) {
     const f = e.target.files[0];
+    e.target.value = '';                    // да исти фајл може поново да се изабере
     if (!f) return;
     try {
       const dataUrl = await processSignature(f);
@@ -491,7 +492,9 @@ window.addEventListener('DOMContentLoaded', () => {
       $('#sigPreview').classList.remove('hidden');
       $('#sigStatus').textContent = 'потпис сачуван ✓';
     } catch (err) { alert('Не могу да учитам потпис: ' + err.message); }
-  });
+  }
+  $('#sigCamera').addEventListener('change', handleSignature);   // 📷 камера
+  $('#sigFile').addEventListener('change', handleSignature);     // 📁 из галерије
 
   $('#btnProcess').addEventListener('click', onProcess);
   $('#btnBack2').addEventListener('click', () => showStep(1));
