@@ -18,7 +18,7 @@
   <header>
     <h1>Изјава за фискални рачун за гориво</h1>
     <p>Сликај рачун → провери податке → направи PDF и подели.</p>
-    <button id="installBtn" class="installbtn hidden">⬇ Инсталирај апликацију</button>
+    <button id="installBtn" class="installbtn">⬇ Инсталирај апликацију</button>
   </header>
 
   <div class="steps">
@@ -115,7 +115,10 @@
     </p>
     <p id="s3sent" class="ok-note hidden" style="background:#e3f1ef;color:#0b5a54">Послато / преузето ✓</p>
 
-    <button class="btn ghost" id="btnNew" style="margin-top:14px">+ Нова изјава</button>
+    <div class="btnrow" style="margin-top:14px">
+      <button class="btn ghost" id="btnBack3">← Назад</button>
+      <button class="btn ghost" id="btnNew">+ Нова изјава</button>
+    </div>
   </section>
 
   <footer>Све се ради у прегледачу · ништа не одлази са уређаја · ради и офлајн</footer>

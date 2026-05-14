@@ -502,28 +502,30 @@ window.addEventListener('DOMContentLoaded', () => {
   $('#btnShare').addEventListener('click', shareOrMail);
   $('#btnNew').addEventListener('click', () => location.reload());
 
-  // ── PWA: дугме за инсталацију ──
+  // ── PWA: дугме за инсталацију (увек видљиво, осим ако је већ инсталирано) ──
   let deferredPrompt = null;
   const installBtn = $('#installBtn');
   const isStandalone = () =>
     window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if (isStandalone()) installBtn.classList.add('hidden');
   window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
+    e.preventDefault();          // задржи догађај да га искористимо на клик
     deferredPrompt = e;
-    if (!isStandalone()) installBtn.classList.remove('hidden');
   });
   installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) {
-      const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent);
-      alert(isIos
-        ? 'iPhone/iPad: тапни „Подели" (□↑) у Safari-ју → „Add to Home Screen".'
-        : 'Из менија прегледача изабери „Install app" / „Add to Home screen".');
+    if (isStandalone()) { alert('Апликација је већ инсталирана.'); return; }
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      try { await deferredPrompt.userChoice; } catch (e) {}
+      deferredPrompt = null;
       return;
     }
-    deferredPrompt.prompt();
-    try { await deferredPrompt.userChoice; } catch (e) {}
-    deferredPrompt = null;
-    installBtn.classList.add('hidden');
+    // прегледач још није понудио инсталацију (или iOS Safari) — ручно упутство
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    alert(isIos
+      ? 'iPhone/iPad (Safari): тапни „Подели" (□↑) → „Add to Home Screen" → „Add".'
+      : 'Android (Chrome): мени (⋮) → „Add to Home screen" / „Install app".\n'
+      + 'Ако опција не постоји, сачекај пар секунди — прегледач понуди инсталацију сам.');
   });
   window.addEventListener('appinstalled', () => installBtn.classList.add('hidden'));
 });
