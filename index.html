@@ -74,11 +74,13 @@
     </div>
 
     <label>Слика фискалног рачуна</label>
-    <label class="filebox" id="fileBox" for="racunFile">
-      <input type="file" id="racunFile" accept="image/*" capture="environment">
-      <div class="big" id="fileLabel">Сликај или изабери рачун</div>
+    <label class="filebox" id="fileBox" for="racunCamera">
+      <input type="file" id="racunCamera" accept="image/*" capture="environment">
+      <div class="big" id="fileLabel">Сликај рачун</div>
       <div class="sub" id="fileSub">QR код треба да буде на слици</div>
     </label>
+    <p class="filealt">или <label for="racunFile" class="textbtn">изабери постојећу слику из галерије</label></p>
+    <input type="file" id="racunFile" accept="image/*" hidden>
 
     <button class="btn" id="btnProcess" style="margin-top:18px">Обради рачун →</button>
   </section>

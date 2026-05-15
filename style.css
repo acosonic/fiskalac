@@ -185,6 +185,11 @@ input:focus, select:focus {
 .filebox input { display: none; }
 .filebox .big { font-size: 1rem; font-weight: 800; }
 .filebox .sub { margin-top: 4px; color: var(--muted); font-size: .84rem; }
+
+/* алтернативни линк за избор постојеће слике */
+.filealt { text-align: center; font-size: .88rem; color: var(--muted); margin: 10px 0 0; }
+.textbtn { color: var(--accent); cursor: pointer; text-decoration: underline; }
+.textbtn:hover { color: var(--accent-d); }
 .filebox.has {
   border-style: solid;
   border-color: var(--accent);

@@ -268,7 +268,7 @@ function inputToParts(v) {                        // "2026-05-14" -> {ddmmyyyy, 
 
 // ── KORAK 1 -> 2: obrada ─────────────────────────────────────────────────────
 async function onProcess() {
-  const file = $('#racunFile').files[0];
+  const file = $('#racunCamera').files[0] || $('#racunFile').files[0];
   if (!file) { alert('Изаберите или сликајте рачун.'); return; }
   if (!$('#ime').value.trim())   { alert('Унесите име и презиме.'); return; }
   if (!$('#firma').value.trim()) { alert('Унесите фирму / послодавца.'); return; }
@@ -519,15 +519,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
   for (const k of PROFILE_KEYS) $('#' + k).addEventListener('blur', saveProfile);
 
-  $('#racunFile').addEventListener('change', (e) => {
+  function onReceiptPicked(e) {
     const f = e.target.files[0];
+    if (!f) return;
+    // ако корисник изабере преко једног инпута, очисти други (да onProcess узме исправно)
+    const other = e.target.id === 'racunCamera' ? $('#racunFile') : $('#racunCamera');
+    other.value = '';
     const box = $('#fileBox');
-    if (f) {
-      box.classList.add('has');
-      $('#fileLabel').textContent = f.name;
-      $('#fileSub').textContent = 'кликни да промениш';
-    }
-  });
+    box.classList.add('has');
+    $('#fileLabel').textContent = f.name;
+    $('#fileSub').textContent = 'кликни да промениш';
+  }
+  $('#racunCamera').addEventListener('change', onReceiptPicked);
+  $('#racunFile').addEventListener('change', onReceiptPicked);
 
   async function handleSignature(e) {
     const f = e.target.files[0];
