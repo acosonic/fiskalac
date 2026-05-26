@@ -20,6 +20,7 @@ function loadProfile() {
   if (sig) {
     $('#sigPreview').src = sig;
     $('#sigPreview').classList.remove('hidden');
+    $('#sigClear').classList.remove('hidden');
     $('#sigStatus').textContent = 'сачуван потпис ✓ (кликни да промениш)';
   }
 }
@@ -53,8 +54,13 @@ function inkComponents(f, W, H, thr) {
 // flatten уклања сенке/неравномерно светло, connected-components издваја потпис
 // од ситних мрља/тачкица, па мастило → тамно непрозирно, папир → провидно.
 async function processSignature(file) {
-  const img = await fileToImage(file);
-  const { f, W, H } = flattenGray(img, 2400);
+  // createImageBitmap ispravno primenjuje EXIF rotaciju (Safari iOS 15.4+),
+  // što fixes sliku potpisanu na iPhoneu koja bi inače bila sideways.
+  const src = (typeof createImageBitmap !== 'undefined')
+    ? await createImageBitmap(file)
+    : await fileToImage(file);
+  const { f, W, H } = flattenGray(src, 2400);
+  if (src.close) src.close();
 
   const comps = inkComponents(f, W, H, 115);
   let bb;
@@ -387,7 +393,7 @@ async function buildIzjavaCanvas(o) {
   const rw = 470, rx = W - M - rw;
   ctx.textAlign = 'center';
   ctx.fillText('Запослени/а', rx + rw/2, sigY);
-  if (o.potpis) {
+  if (o.potpis && o.potpis.width > 0 && o.potpis.height > 0) {
     let ph = 145, pw = o.potpis.width * (ph / o.potpis.height);
     if (pw > rw - 60) { pw = rw - 60; ph = o.potpis.height * (pw / o.potpis.width); }
     ctx.drawImage(o.potpis, rx + rw/2 - pw/2, sigY + 22, pw, ph);
@@ -423,7 +429,14 @@ async function onGenerate() {
     await tick();
     let potpis = null;
     const sig = localStorage.getItem('fisk_potpis');
-    if (sig) { potpis = new Image(); potpis.src = sig; await potpis.decode().catch(()=>{}); }
+    if (sig) {
+      potpis = await new Promise(res => {
+        const img = new Image();
+        img.onload = () => res(img.width > 0 && img.height > 0 ? img : null);
+        img.onerror = () => res(null);
+        img.src = sig;
+      });
+    }
 
     const danas = new Date();
     const dd = String(danas.getDate()).padStart(2,'0');
@@ -542,11 +555,19 @@ window.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('fisk_potpis', dataUrl);
       $('#sigPreview').src = dataUrl;
       $('#sigPreview').classList.remove('hidden');
+      $('#sigClear').classList.remove('hidden');
       $('#sigStatus').textContent = 'потпис сачуван ✓';
     } catch (err) { alert('Не могу да учитам потпис: ' + err.message); }
   }
   $('#sigCamera').addEventListener('change', handleSignature);   // 📷 камера
   $('#sigFile').addEventListener('change', handleSignature);     // 📁 из галерије
+  $('#sigClear').addEventListener('click', () => {
+    localStorage.removeItem('fisk_potpis');
+    $('#sigPreview').src = '';
+    $('#sigPreview').classList.add('hidden');
+    $('#sigClear').classList.add('hidden');
+    $('#sigStatus').textContent = 'потпис се памти на овом уређају';
+  });
 
   $('#btnProcess').addEventListener('click', onProcess);
   $('#btnBack2').addEventListener('click', () => showStep(1));
