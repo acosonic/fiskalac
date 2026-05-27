@@ -23,6 +23,9 @@ function loadProfile() {
     $('#sigClear').classList.remove('hidden');
     $('#sigStatus').textContent = 'сачуван потпис ✓ (кликни да промениш)';
   }
+  if (PROFILE_KEYS.every(k => !cfg(k))) {
+    $('#firstuse').classList.remove('hidden');
+  }
 }
 function saveProfile() {
   for (const k of PROFILE_KEYS) localStorage.setItem('fisk_' + k, $('#' + k).value.trim());
@@ -321,6 +324,7 @@ function fillStep2() {
   if (state.source === 'qr') { badge.textContent = 'из QR кода ✓'; badge.className = 'srcbadge src-qr'; }
   else { badge.textContent = 'ручни унос'; badge.className = 'srcbadge src-man'; }
   $('#s2note').classList.toggle('hidden', state.source === 'qr');
+  $('#s2read').classList.toggle('read-ok', state.source === 'qr');
 
   $('#s2preview').src = state.cleanCanvas.toDataURL('image/png');
 }
@@ -466,7 +470,9 @@ async function onGenerate() {
         `(Прилог: преузети PDF — ${state.pdfName})\n\n` +
         `Срдачан поздрав,\n${ime}`,
     };
-    $('#s3to').textContent = cfg('email') ? 'Прималац: ' + cfg('email') : '';
+    const email = cfg('email');
+    $('#s3to').textContent = email;
+    $('#s3to-row').classList.toggle('hidden', !email);
     showStep(3);
   } catch (e) {
     console.error(e);

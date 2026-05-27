@@ -6,7 +6,7 @@
 //   - Cross-origin              -> ne dira (samo PURS-a nema više; sve je lokalno)
 //
 // Bumpuj CACHE_VERSION kad se menjaju ikonice ili kad treba obrisati stari keš.
-const CACHE_VERSION = 'v11';
+const CACHE_VERSION = 'v12';
 const CACHE_NAME = `fiskalac-${CACHE_VERSION}`;
 
 const SCOPE = new URL(self.registration.scope).pathname;

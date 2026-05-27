@@ -44,6 +44,10 @@
   <section id="step1" class="card">
     <h2>Подаци и слика рачуна</h2>
 
+    <div id="firstuse" class="firstuse hidden">
+      Добродошли! Попуни своје податке само <b>једном</b> — следећи пут ће бити аутоматски уписани.
+    </div>
+
     <label for="ime">Име и презиме</label>
     <input type="text" id="ime" placeholder="нпр. Петар Петровић" autocomplete="name">
 
@@ -52,6 +56,7 @@
 
     <label for="grad">Место (град)</label>
     <input type="text" id="grad" placeholder="нпр. Новом Саду">
+    <p class="hint">Укуцај у облику: „У ___" — нпр. за Нови Сад укуцај <b>Новом Саду</b></p>
 
     <label for="email">Прималац мејла (опционо)</label>
     <input type="email" id="email" placeholder="нпр. racunovodstvo@firma.rs" autocomplete="email">
@@ -75,10 +80,31 @@
     </div>
 
     <label>Слика фискалног рачуна</label>
+    <div class="qrhint">
+      <svg viewBox="0 0 80 118" width="56" height="83" aria-hidden="true">
+        <rect x="3" y="3" width="74" height="112" rx="4" fill="#f8fafb" stroke="#bdc9d5" stroke-width="1.5"/>
+        <line x1="12" y1="20" x2="68" y2="20" stroke="#d5dee6" stroke-width="2"/>
+        <line x1="12" y1="30" x2="55" y2="30" stroke="#d5dee6" stroke-width="2"/>
+        <line x1="12" y1="40" x2="62" y2="40" stroke="#d5dee6" stroke-width="2"/>
+        <line x1="12" y1="50" x2="48" y2="50" stroke="#d5dee6" stroke-width="2"/>
+        <line x1="12" y1="60" x2="58" y2="60" stroke="#d5dee6" stroke-width="2"/>
+        <rect x="42" y="72" width="28" height="28" rx="2" fill="#e7f0f8" stroke="#285c8f" stroke-width="1.5"/>
+        <rect x="46" y="76" width="7" height="7" rx="1" fill="#285c8f"/>
+        <rect x="57" y="76" width="7" height="7" rx="1" fill="#285c8f"/>
+        <rect x="46" y="87" width="7" height="7" rx="1" fill="#285c8f"/>
+        <rect x="57" y="87" width="3" height="3" fill="#285c8f"/>
+        <rect x="62" y="87" width="3" height="3" fill="#285c8f"/>
+        <rect x="57" y="92" width="3" height="3" fill="#285c8f"/>
+      </svg>
+      <div class="qrhint-text">
+        <b>QR код је у доњем десном углу рачуна</b><br>
+        Сликај тако да цео рачун буде видљив на фотографији.
+      </div>
+    </div>
     <label class="filebox" id="fileBox" for="racunCamera">
       <input type="file" id="racunCamera" accept="image/*" capture="environment">
       <div class="big" id="fileLabel">Сликај рачун</div>
-      <div class="sub" id="fileSub">QR код треба да буде на слици</div>
+      <div class="sub" id="fileSub">Потруди се да QR код буде оштар и видљив</div>
     </label>
     <p class="filealt">или <label for="racunFile" class="textbtn">изабери постојећу слику из галерије</label></p>
     <input type="file" id="racunFile" accept="image/*" hidden>
@@ -90,25 +116,27 @@
   <section id="step2" class="card hidden">
     <h2>Провери и исправи податке</h2>
 
-    <div class="read">
+    <div class="read" id="s2read">
       <span class="hint" style="margin:0">Број рачуна:</span>
       <span id="s2src" class="srcbadge src-man">—</span>
     </div>
     <p id="s2note" class="note hidden">
-      QR код није прочитан — унеси број рачуна и датум ручно (пишу на рачуну).
+      QR код није прочитан — унеси <b>број рачуна</b> и <b>датум</b> ручно (пишу на самом рачуну).
     </p>
 
     <label for="s2ime">Име и презиме</label>
     <input type="text" id="s2ime">
 
-    <label for="s2bi">Број рачуна (БИ)</label>
+    <label for="s2bi">Број рачуна</label>
     <input type="text" id="s2bi" inputmode="numeric" placeholder="нпр. 298028">
+    <p class="hint">Број са дна фискалног рачуна (обично 6 цифара)</p>
 
     <label for="s2datum">Датум рачуна</label>
     <input type="date" id="s2datum">
 
     <label for="s2mesec">Месец на који се односи</label>
     <select id="s2mesec"></select>
+    <p class="hint">Месец у ком је купљено гориво (обично исти месец као датум рачуна)</p>
 
     <div class="preview">
       <img id="s2preview" alt="очишћен рачун">
@@ -133,10 +161,12 @@
       <button class="btn" id="btnShare">Подели / пошаљи</button>
       <button class="btn ghost" id="btnDownload">Преузми</button>
     </div>
-    <p class="ok-note">
-      Тапни <b>„Подели"</b> → изабери <b>Gmail</b> (или друго) — PDF се сам прикачи као прилог.
-      <span id="s3to"></span>
-    </p>
+    <div class="send-steps">
+      <div class="send-step"><span class="step-num">1</span> Тапни <b>„Подели / пошаљи"</b></div>
+      <div class="send-step"><span class="step-num">2</span> Изабери <b>Gmail</b> или другу апликацију</div>
+      <div class="send-step"><span class="step-num">3</span> PDF је аутоматски прикачен као прилог</div>
+      <div class="send-step" id="s3to-row"><span class="step-num">4</span> Прималац: <span id="s3to" class="send-email"></span></div>
+    </div>
     <p id="s3sent" class="ok-note hidden" style="background:#e3f1ef;color:#0b5a54">Послато / преузето ✓</p>
 
     <div class="btnrow" style="margin-top:14px">

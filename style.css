@@ -382,6 +382,74 @@ input:focus, select:focus {
   color: var(--accent-d);
   font-size: .86rem;
 }
+/* dobrodošlica za novog korisnika */
+.firstuse {
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border: 1px solid #b8dcd5;
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent-l);
+  color: var(--accent-d);
+  font-size: .9rem;
+  line-height: 1.6;
+}
+
+/* QR hint — skica računa + tekst */
+.qrhint {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+  padding: 12px 14px;
+  border: 1px solid #dce4eb;
+  border-left: 4px solid var(--blue);
+  border-radius: var(--radius);
+  background: var(--blue-l);
+}
+.qrhint svg { flex-shrink: 0; }
+.qrhint-text { color: #506173; font-size: .85rem; line-height: 1.6; }
+.qrhint-text b { color: var(--ink); }
+
+/* read row zeleni kad je QR uspešan */
+.read.read-ok {
+  border-color: #b8dcd5;
+  background: var(--accent-l);
+}
+
+/* korak 3 — numerisani vodič za slanje */
+.send-steps {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid #c4e5df;
+  border-radius: var(--radius);
+  background: var(--accent-l);
+  color: var(--accent-d);
+  font-size: .9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.send-step {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.step-num {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 800;
+}
+.send-email { font-weight: 800; word-break: break-all; }
+
 footer {
   margin-top: 18px;
   color: var(--muted);
