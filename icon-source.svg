@@ -5,57 +5,83 @@
     </clipPath>
   </defs>
 
-  <!-- pozadina: srpska trobojka, talasasta (isti stil kao parking/qrpay app) -->
+  <!-- srpska trobojka, talasasta -->
   <g clip-path="url(#rounded)">
     <path fill="#C6363C" d="M 0 0 L 512 0 L 512 178 Q 384 215, 256 178 Q 128 141, 0 178 Z"/>
     <path fill="#0C4076" d="M 0 178 Q 128 141, 256 178 Q 384 215, 512 178 L 512 348 Q 384 311, 256 348 Q 128 385, 0 348 Z"/>
     <path fill="#FFFFFF" d="M 0 348 Q 128 385, 256 348 Q 384 311, 512 348 L 512 512 L 0 512 Z"/>
   </g>
 
-  <!-- beli panel -->
-  <rect x="84" y="116" width="344" height="292" rx="46"
-        fill="#FFFFFF" stroke="#1A1A1A" stroke-width="22" stroke-linejoin="round" paint-order="stroke fill"/>
+  <g clip-path="url(#rounded)">
+    <!-- AUTO: bela silhueta + tamni stroke, direktno na zastavi (vidljiv na crvenoj i plavoj) -->
+    <path
+      d="M 40 265
+         Q 40 218, 88 205
+         L 162 202
+         L 172 120
+         Q 196 74, 256 68
+         Q 316 74, 342 120
+         L 352 202
+         Q 422 202, 460 234
+         L 476 258
+         Q 480 273, 462 275
+         L 54 275
+         Q 40 275, 40 265 Z"
+      fill="#FFFFFF"
+      stroke="#1A1A1A"
+      stroke-width="18"
+      stroke-linejoin="round"
+      paint-order="stroke fill"/>
+    <!-- točkovi -->
+    <circle cx="152" cy="278" r="53" fill="#1A1A1A"/>
+    <circle cx="152" cy="278" r="20" fill="#FFFFFF"/>
+    <circle cx="365" cy="278" r="53" fill="#1A1A1A"/>
+    <circle cx="365" cy="278" r="20" fill="#FFFFFF"/>
 
-  <!-- AUTO (bočni izgled), plav -->
-  <g stroke="#1A1A1A" stroke-width="13" stroke-linejoin="round" paint-order="stroke fill">
-    <!-- kabina -->
-    <path d="M 188 156 L 286 156 Q 318 156, 338 196 L 188 196 Z" fill="#9DB8D6"/>
-    <!-- telo -->
-    <path d="M 120 246
-             Q 120 210, 158 200
-             L 348 200
-             Q 372 200, 386 224
-             L 392 234
-             Q 396 246, 384 250
-             L 132 250
-             Q 120 250, 120 246 Z" fill="#0C4076"/>
-  </g>
-  <!-- točkovi -->
-  <circle cx="178" cy="250" r="34" fill="#1A1A1A"/>
-  <circle cx="178" cy="250" r="14" fill="#FFFFFF"/>
-  <circle cx="332" cy="250" r="34" fill="#1A1A1A"/>
-  <circle cx="332" cy="250" r="14" fill="#FFFFFF"/>
-
-  <!-- QR kod (stilizovan, nije skenabilan) -->
-  <g transform="translate(180, 290)">
-    <rect x="-10" y="-10" width="172" height="116" rx="16" fill="#F4F6F8"/>
-    <!-- 3 finder kvadrata -->
-    <rect x="2"   y="2"  width="34" height="34" rx="7" fill="#1A1A1A"/>
-    <rect x="12"  y="12" width="14" height="14" rx="3" fill="#F4F6F8"/>
-    <rect x="116" y="2"  width="34" height="34" rx="7" fill="#1A1A1A"/>
-    <rect x="126" y="12" width="14" height="14" rx="3" fill="#F4F6F8"/>
-    <rect x="2"   y="62" width="34" height="34" rx="7" fill="#1A1A1A"/>
-    <rect x="12"  y="72" width="14" height="14" rx="3" fill="#F4F6F8"/>
-    <!-- moduli -->
-    <rect x="52"  y="4"   width="13" height="13" rx="3" fill="#1A1A1A"/>
-    <rect x="72"  y="20"  width="13" height="13" rx="3" fill="#1A1A1A"/>
-    <rect x="92"  y="4"   width="13" height="13" rx="3" fill="#C6363C"/>
-    <rect x="52"  y="40"  width="13" height="13" rx="3" fill="#1A1A1A"/>
-    <rect x="86"  y="40"  width="13" height="13" rx="3" fill="#1A1A1A"/>
-    <rect x="116" y="50"  width="34" height="34" rx="7" fill="#1A1A1A"/>
-    <rect x="126" y="60"  width="14" height="14" rx="3" fill="#F4F6F8"/>
-    <rect x="52"  y="66"  width="13" height="13" rx="3" fill="#1A1A1A"/>
-    <rect x="72"  y="82"  width="13" height="13" rx="3" fill="#1A1A1A"/>
-    <rect x="92"  y="66"  width="13" height="13" rx="3" fill="#1A1A1A"/>
+    <!-- QR kod: crvena podloga vidljiva i na plavom i na belom delu zastave -->
+    <rect x="34" y="348" width="444" height="148" rx="22" fill="#C6363C"/>
+    <g fill="#FFFFFF">
+      <!-- finder: gornji levi -->
+      <rect x="56"  y="364" width="44" height="44" rx="8"/>
+      <rect x="66"  y="374" width="24" height="24" rx="5" fill="#C6363C"/>
+      <rect x="73"  y="381" width="10" height="10" rx="2"/>
+      <!-- finder: gornji desni -->
+      <rect x="412" y="364" width="44" height="44" rx="8"/>
+      <rect x="422" y="374" width="24" height="24" rx="5" fill="#C6363C"/>
+      <rect x="429" y="381" width="10" height="10" rx="2"/>
+      <!-- finder: donji levi -->
+      <rect x="56"  y="424" width="44" height="44" rx="8"/>
+      <rect x="66"  y="434" width="24" height="24" rx="5" fill="#C6363C"/>
+      <rect x="73"  y="441" width="10" height="10" rx="2"/>
+      <!-- data moduli - levi sektor -->
+      <rect x="116" y="366" width="14" height="14" rx="3"/>
+      <rect x="138" y="366" width="14" height="14" rx="3"/>
+      <rect x="160" y="380" width="14" height="14" rx="3"/>
+      <rect x="182" y="366" width="14" height="14" rx="3"/>
+      <rect x="116" y="384" width="14" height="14" rx="3"/>
+      <rect x="182" y="398" width="14" height="14" rx="3"/>
+      <rect x="138" y="414" width="14" height="14" rx="3"/>
+      <rect x="116" y="430" width="14" height="14" rx="3"/>
+      <rect x="160" y="430" width="14" height="14" rx="3"/>
+      <!-- data moduli - srednji sektor -->
+      <rect x="222" y="368" width="14" height="14" rx="3"/>
+      <rect x="248" y="356" width="14" height="14" rx="3"/>
+      <rect x="270" y="372" width="14" height="14" rx="3"/>
+      <rect x="292" y="360" width="14" height="14" rx="3"/>
+      <rect x="222" y="396" width="14" height="14" rx="3"/>
+      <rect x="270" y="390" width="14" height="14" rx="3"/>
+      <rect x="248" y="412" width="14" height="14" rx="3"/>
+      <rect x="292" y="408" width="14" height="14" rx="3"/>
+      <rect x="222" y="432" width="14" height="14" rx="3"/>
+      <!-- data moduli - desni sektor -->
+      <rect x="346" y="366" width="14" height="14" rx="3"/>
+      <rect x="368" y="380" width="14" height="14" rx="3"/>
+      <rect x="390" y="364" width="14" height="14" rx="3"/>
+      <rect x="346" y="396" width="14" height="14" rx="3"/>
+      <rect x="390" y="390" width="14" height="14" rx="3"/>
+      <rect x="368" y="414" width="14" height="14" rx="3"/>
+      <rect x="346" y="430" width="14" height="14" rx="3"/>
+      <rect x="390" y="424" width="14" height="14" rx="3"/>
+    </g>
   </g>
 </svg>
